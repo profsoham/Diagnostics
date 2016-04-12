@@ -1,0 +1,60 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="You arrived  a Confidential Page" border="normal"
+		id="win_Global_Login" width="500px" height="600px">
+
+		<zscript>
+
+<![CDATA[
+	long p1;
+	long authInit() {
+		Object[] challange = com.prophecysensorlytic.daig.auth.UtilImage.randomQR_ChallengeForGlobal();
+		java.awt.image.BufferedImage img = (java.awt.image.BufferedImage) challange[1];
+		long pwd = (long) challange[0];
+		img_QR_challnge.setContent(img);
+		return pwd;
+	}
+	void chk() {
+		if (String.valueOf(p1).equalsIgnoreCase(tb_Pwd.getText())) {
+			
+			Executions.sendRedirect("diag_home.zul");
+		} else {
+			Clients.showNotification("Invalid Login");
+		}
+	}
+]]>
+</zscript>
+		<grid>
+			<columns>
+				<column label="" />
+				<column label="" />
+			</columns>
+			<rows>
+				<row>
+					<label
+						value="Use your Smartphone to get yourself Authenticated"/>
+						<image id="img_QR_challnge" width="200px"
+							height="200px">
+</image>
+				</row>
+				<row>
+
+					<textbox id="tb_Pwd"
+						placeholder="Your Password here">
+					</textbox>
+					<button id="btn_Auth" label="Verify"
+						onClick="chk()">
+					</button>
+				</row>
+			</rows>
+		</grid>
+
+
+
+		<zscript>
+	<![CDATA[
+	p1=authInit();
+	]]>
+	</zscript>
+	</window>
+</zk>

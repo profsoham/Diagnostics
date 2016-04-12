@@ -1,0 +1,77 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="Diagnostic Bundle Viewer" border="normal"
+		id="win_BundleViewer" width="100%" height="670px"
+		apply="com.prophecysenorlytic.diag.ui.zk.controllers.Controller_BundleViewer">
+		<groupbox closable="false" zindex="5">
+			<caption label="Get via PIN"></caption>
+			<hbox>
+				<combobox id="cmb_SrcOne" placeholder="MVP or BETA?"
+					width="100px" constraint="no empty">
+					<comboitem label="BETA" value="BETA"></comboitem>
+					<comboitem label="MVP" value="MVP"></comboitem>
+				</combobox>
+				<textbox id="tb_Pin" placeholder="Enter PIN"
+					constraint="no empty">
+				</textbox>
+				<button id="btn_Download" tooltiptext="Download Log"
+					image="icons/icon_dowloadCsv.png">
+				</button>
+
+			</hbox>
+		</groupbox>
+
+		<vbox>
+
+			<groupbox closable="false" zindex="5">
+				<caption label="Diagnostic Bundle Viewer"></caption>
+				<vbox>
+					<hbox>
+						<combobox id="cmb_Src"
+							placeholder="MVP or BETA?" width="100px">
+							<comboitem label="BETA" value="BETA"></comboitem>
+							<comboitem label="MVP" value="MVP"></comboitem>
+						</combobox>
+						<combobox id="cmb_Companies"
+							placeholder="Select a company" readonly="false" type="text">
+						</combobox>
+						<intbox id="tb_DateRangeFigure"
+							constraint="no empty" placeholder="interval Range in number"
+							readonly="false" />
+
+
+						<combobox id="cmb_DateRangeUnit"
+							constraint="no empty" placeholder="Select Interval Unit"
+							readonly="false" type="text">
+							<comboitem label="week" value="Week"></comboitem>
+							<comboitem label="month" value="Month">
+							</comboitem>
+						</combobox>
+						<button id="btn_Fetch" tooltiptext="Search"
+							image="icons/icon_find.jpg">
+						</button>
+					</hbox>
+					<listbox id="lst_BundleViewer" mold="paging"
+						pagingPosition="both" pageSize="10" width="100%"
+						sizedByContent="false">
+						<listhead>
+
+							<listheader label="Issue report date"></listheader>
+							<listheader label="Data Bundle Sender"
+								width="10%">
+							</listheader>
+							<listheader label="PIN" width="10%"></listheader>
+							<listheader tooltiptext="File download Link"
+								image="/icons/icon_dowloadCsv.png">
+							</listheader>
+
+						</listhead>
+					</listbox>
+				</vbox>
+			</groupbox>
+		</vbox>
+
+
+
+	</window>
+</zk>

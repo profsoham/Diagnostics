@@ -1,0 +1,84 @@
+<zk>
+	<window id="win_SensorStatsHistory" width="600px" closable="true"
+		apply="com.prophecysenorlytic.diag.ui.zk.controllers.Controller_SensorHisotry"
+		border="normal" defaultActionOnShow="moveRight" focus="true"
+		mode="modal" position="center">
+		<style dynamic="true">
+			.z-toolbar a, .z-toolbar a:visited, .z-toolbar a:hover {
+			background-color:transparent; border:0 none; } .vista {
+			background:#000000
+			url(/zkdemo/widgets/menu/toolbar/img/bar.png) repeat-x 0 0;
+			color:white; padding-top:7px; } .p-vista .z-panel-children {
+			background-color: #008BB6; border-bottom: 0 none; }
+		</style>
+		<toolbar id="tb_Header" sclass="vista" height="60px"
+			width="600px" align="start">
+			<combobox id="cmb_MVP" autocomplete="true" width="120px"
+				constraint="no empty" placeholder="Select where to Point">
+				<comboitem label="BETA" value="BETA"></comboitem>
+				<comboitem label="MVP" value="MVP"></comboitem>
+				
+			</combobox>
+			<separator orient="vertical" bar="true" />
+			<intbox id="tb_Interval" constraint="no empty" width="120px"
+				placeholder="Time since past..." />
+			<separator orient="vertical" bar="true" />
+			<combobox id="cmb_Unit" autocomplete="true" width="120px"
+				constraint="no empty" placeholder="Choose Time Unit">
+				<comboitem label="Minute" value="0"></comboitem>
+				<comboitem label="Hour" value="1"></comboitem>
+
+			</combobox>
+			<separator orient="vertical" bar="true" />
+			<toolbarbutton id="btn_Show" tooltiptext="Show History"
+				image="./icons/icon_view.jpg" />
+			<separator orient="vertical" bar="true" />
+			<toolbarbutton id="btn_Download" tooltiptext="Download Log"
+				image="./icons/icon_dowloadCsv.png" disabled="true" />
+			<separator orient="vertical" bar="true" />
+
+		</toolbar>
+		<separator />
+		<panel id="pnl_Hisotry" title="Hisotry Panel" height="550px"
+			width="600px" border="normal" sclass="p-vista">
+			<panelchildren>
+				<grid id="grd_History" mold="paging" pageSize="20"
+					pagingPosition="top">
+					<columns>
+						<column label="Date" />
+						<column label="Type" sort="auto(type)" />
+						<column label="Rate" />
+					</columns>
+					<rows>
+						<template name="model">
+							<row>
+								<label value="${each.date }"></label>
+								<label value="${each.type }"></label>
+								<label value="${each.rate }"></label>
+							</row>
+						</template>
+					</rows>
+				</grid>
+			</panelchildren>
+			<toolbar id="tb_Options" sclass="vista" height="50px"
+				align="end">
+				
+				
+				<toolbarbutton image="./icons/icon_dowloadCsv.png"
+					tooltiptext="Download CSV" disabled="true" id="btn_DownloadCSV" />
+				<separator orient="vertical" bar="true" focus="true"></separator>
+				
+				
+				
+				
+				<label id="lbl_ServerTime"></label>
+				<separator orient="vertical" bar="true" focus="true"></separator>
+				<label id="lbl_LastActivity" multiline="true" maxlength="10" style="text-color:yellow"></label>
+				<separator orient="vertical" bar="true" focus="true"></separator>
+				<toolbarbutton tooltiptext="Close"
+					image="./icons/icon_close.jpg"
+					onClick='win_SensorStatsHistory.detach()' />
+			</toolbar>
+		</panel>
+	</window>
+</zk>

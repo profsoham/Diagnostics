@@ -1,0 +1,66 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="new page title" border="normal" width="400px"
+		id="win_LastActivity_Info" height="380px" closable="true"
+		defaultActionOnShow="moveRight" focus="true" mode="modal"
+		position="center"
+		apply="com.prophecysenorlytic.diag.ui.zk.controllers.Controller_View_Last_Acticity_Rpi">
+
+		<groupbox closable="false">
+			<hbox>
+				<label value="Name" />
+				<label id="lbl_Name" />
+			</hbox>
+			<hbox>
+				<label value="MAC Address" />
+				<label id="lbl_MAC" />
+			</hbox>
+			<hbox>
+				<label value="Internal IP" />
+				<label id="lbl_internalIP" />
+			</hbox>
+			<hbox>
+				<label value="External IP" />
+				<label id="lbl_ExternalIP" />
+			</hbox>
+		</groupbox>
+		<grid id="grd_Details"  height="240px" style="overflow: scroll;">
+			<columns>
+				<column label="" width="30%" />
+				<column label="" />
+			</columns>
+			<rows>
+				
+					<row>
+						<label value="Last Seen" />
+						<label id="lbl_LastSeen" />
+					</row>
+					<row>
+						<label value="Last timestamp" />
+						<label id="lbl_LastTimestamp"  />
+					</row>
+					<row>
+						<label value="Load" />
+						<label id="lbl_Load"  />
+					</row>
+					<row>
+						<label value="Memory" />
+						<label id="lbl_Memory" />
+					</row>
+					<row>
+						<label value="Uptime" />
+						<label id="lbl_Uptime" />
+					</row>
+					<row>
+						<label value="Wi-Fi" />
+						<label id="lbl_Wifi" />
+					</row>
+
+
+				
+			</rows>
+		</grid>
+
+
+	</window>
+</zk>

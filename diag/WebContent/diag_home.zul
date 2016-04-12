@@ -1,0 +1,27 @@
+<?page title="Prophecy Sensorlytics Diagnostics Home Page" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="Prophecy Sensorlytics Diagnostics Home Page"
+		border="normal">
+		<tabbox orient="top">
+			<tabs width="230px">
+				<tab label="Prophecy Gateways" />
+				<tab label="Companies / Assets" />
+				<tab label="Bundle Viewer" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<include src="rpi.zul"></include>
+
+				</tabpanel>
+				<tabpanel>
+
+					<include src="machineView.zul"></include>
+				</tabpanel>
+				<tabpanel>
+
+					<include src="diagbundle.zul"></include>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>
