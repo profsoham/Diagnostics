@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<!-- <style type="text/css">
+.ui-mobile-viewport {
+	background:
+		url("icon_rpi.png")
+		no-repeat;
+	background-size: 100% 100% !important;
+}
+
+.ui-page {
+	
+}
+
+.ui-overlay-a {
+	background: #222 !important;
+}
+</style> -->
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script type="text/javascript" src="js/moment.js"></script>
+<script type="text/javascript" src="js/mtd.js"></script>
+<script>
+	$(document).on("pagecreate", function() {
+		initSocketIO();
+	});
+	var selectedResponse = null;
+	var sw_version=null;
+	var rpis = [];
+	var mData = [];
+	function updateData(z) {
+		var m_cmd = z.cmd;
+		var m_id = m_cmd.id;
+		console.log(m_id + "  " + m_cmd);
+		for (i = 0; i < mData.length; i++) {
+			var x = mData[i];
+			var cmd = x.cmd;
+			var _id = cmd.id;
+			console.log(m_id + "   " + _id + "  " + (m_id == _id) + "    "
+					+ cmd.time + "  " + m_cmd.time);
+			if (_id == m_id) {
+				mData[i] = z;
+				return mData[i];
+			}
+
+		}
+
+	}
+	function getColorCode(z) {
+		var time = moment().tz('America/New_York').diff(z.cmd.time, 'seconds');
+
+		var color = "lime"
+
+		if (time < 25) {
+			color = "lime"
+		} else if (time >= 25 && time < 50) {
+			color = "yellow"
+		} else if (time >= 50 && time < 75) {
+			color = "red"
+		} else {
+			console.log('deleteing  ' + x)
+
+		}
+		return color;
+	}
+	function initSocketIO() {
+		socket = io.connect('http://104.130.225.224:3000', {
+			'reconnect' : true,
+			'reconnection delay' : 500,
+			'max reconnection attempts' : 10000
+		});
+		var l_item = null;
+
+		socket
+				.on(
+						"connect",
+						function() {
+							console.log('connected');
+							socket
+									.on(
+											'dataHubGUI',
+											function(data) {
+												console.log(data);
+												selectedResponse = data;
+												switch (data.action) {
+												case 'heartbeat':
+
+													var cmd = data.cmd;
+													var _id = cmd.id;
+													if (!rpis.includes(_id)) {
+														rpis.push(_id);
+														mData.push(data);
+														l_item = $("<li id='"+_id+"' title='"+_id+"'><a href='#popupMenu' data-rel='popup' data-transition='slideup'>"
+																+ cmd.name
+																+ "<img src='icons/hb.gif' width='30'  height='30' style='display:none'><p><pre>MAC="
+																+ cmd.mac
+																+ "  Received Time: "
+																+ cmd.time
+																+ "</pre></p></a></li>");
+														l_item
+																.appendTo("#lv_Rpi");
+														$("#lv_Rpi").listview(
+																'refresh');
+													} else {
+														var z = updateData(data);
+														var c = getColorCode(z);
+														console.log(z + "  "
+																+ c);
+														var cmd = z.cmd;
+
+														$("#" + _id + " pre")
+																.html("");
+														$("#lv_Rpi").listview(
+																"refresh");
+														$("#" + _id + " pre")
+																.html(
+																		"MAC="
+																				+ cmd.mac
+																				+ "  Received Time: "
+																				+ cmd.time);
+														l_item = $("#" + _id
+																+ " img");
+														l_item.attr('src', "icons/"+c
+																+ ".png");
+														l_item.css({
+															"display" : "block"
+														});
+
+														$("#lv_Rpi").listview(
+																"refresh");
+
+													}
+
+													break;
+
+												case 'msg':
+
+													document
+															.getElementById("tb_Console").value = data.cmd;
+
+													break;
+												}
+
+											});
+
+						});
+	}
+	
+	function sendCmd(cmd){
+		/* alert(cmd); */
+		var command="";
+		switch(cmd)
+	    {
+
+	        case "DIAG":
+
+	            command = "curl -XPOST 'http://localhost/api/ble/diag'"
+
+	        break;
+
+	        case "ERASEDIAG2":
+
+	            command = "sudo cp /dev/null /var/log/SensorTag.log"
+
+	        break;
+
+	        case "ERASEDIAG3":
+
+	            command = "curl -XPOST 'http://localhost/api/ble/deleteDiag'"
+
+	        break;
+
+	        case "READLOG2":
+
+	            command = "tail -n 100 /var/log/SensorTag.log"
+
+	        break;
+
+
+	        case "READLOG3":
+
+	            command = "tail -n 100 /var/log/ProphecyGateway.log"
+
+	        break;
+
+	        case "LOGSIZE2":
+
+	            command = "du -h /var/log/SensorTag.log"
+
+	        break;
+
+	        case "LOGSIZE3":
+
+	            command = "du -h /var/log/ProphecyGateway.log"
+	            
+	        case "Remote Update":
+	        	sw_version=document.getElementById("tb_SW_Vesrion").value;
+	        	command='curl -XPOST http://localhost/management/upgrade/'+sw_version;
+
+	        break;
+	        
+
+
+
+	    }
+		socket.emit('dataHubControl', {id:selectedResponse.cmd.id,action:'term',cmd:command});
+	}
+</script>
+</head>
+<body>
+
+	<div data-role="page" id="home">
+		<div data-role="header">
+			<h2>LIVE View</h2>
+		</div>
+
+		<div data-role="main" class="ui-content">
+
+			<h5>Available Rpis</h5>
+			<img src="icons/icon_rpi.png">
+			<ul data-role="listview" data-inset="true" id="lv_Rpi">
+
+			</ul>
+		</div>
+
+		<div data-role="popup" id="popupMenu" data-theme="b">
+			<ul data-role="listview" data-inset="true" style="min-width: 210px;">
+				<li data-role="list-divider">Choose an action</li>
+				<li><a href="#details">View details</a></li>
+				<li><a href="#">Send Command</a></li>
+				<li><a href="#">C-1</a></li>
+				<li><a href="#">C-2</a></li>
+			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<h6>&copy; Prophecy Sensorlytics India Pvt Limited</h6>
+		</div>
+	</div>
+
+	<div data-role="page" id="details">
+		<div data-role="header">
+			<a href="#home" data-icon="back">BACK</a>
+
+
+		</div>
+
+		<div data-role="main" class="ui-content">
+			<center>
+				<h3>
+					<img src="icons/icon_rpi.png">
+				</h3>
+			</center>
+			<h5>This field will soon be replaced by a Tree view</h5>
+			<a data-role="ui-btn" href="#"
+				onclick="document.getElementById('ta_Json').value=JSON.stringify(selectedResponse)">Show
+				information</a>
+			<textarea rows="5" cols="60" id="ta_Json" readonly="readonly"
+				style="background: black; color: lime"></textarea>
+
+
+			<div data-role="fieldcontain">
+				<form>
+
+					Type Command: <input type="text" id="tb_Cmd"
+						style="background: black; color: white"
+						placeholder="Type your Command"><br> <input
+						data-theme="a" type="button" value="Send Command" id="btn_Send"
+						onclick="var command=document.getElementById('tb_Cmd').value;socket.emit('dataHubControl', {id:selectedResponse.cmd.id,action:'term',cmd:command})">
+
+				</form>
+				<div data-role="controlgroup" data-type="horizontal">
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">DIAG</a>
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">ERASEDIAG2</a>
+					<a href="#" class="ui-btn " onclick="sendCmd(this.innerHTML)">ERASEDIAG3</a>
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">READLOG2</a>
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">READLOG3</a>
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">LOGSIZE2</a>
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">LOGSIZE3</a>
+					<input id="tb_SW_Vesrion" placeholder="Software Version" required="required">
+					<a href="#" class="ui-btn" onclick="sendCmd(this.innerHTML)">Remote Update</a>
+				</div>
+				<textarea id="tb_Console" rows="18" cols="50"
+					placeholder="Console Response"
+					style="background: black; color: yellow;" readonly="readonly"> </textarea>
+
+
+			</div>
+
+
+			<div data-role="footer" data-position="fixed">
+				<h6>&copy; Prophecy Sensorlytics India Pvt Limited</h6>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

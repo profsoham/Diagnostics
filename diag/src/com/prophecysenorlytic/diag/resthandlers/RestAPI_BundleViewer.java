@@ -30,6 +30,7 @@ public class RestAPI_BundleViewer {
 	
 	public static List<DTO_DiagBundle> getdiagnosticBundleByCompanyAndDateRange(String str_CompanyId,String str_DateRange, boolean isMVP){
 		List<DTO_DiagBundle> bundles=new ArrayList<>();
+		System.err.println(str_CompanyId+"  "+str_DateRange+"  "+isMVP);
 		try {
 			
 			String responseJsonString=HttpUtils.readGetResponse(getUrl_DiagnosticBundleViewer(isMVP, str_CompanyId, str_DateRange), "application/json", "application/json");
@@ -55,7 +56,7 @@ public class RestAPI_BundleViewer {
 	}
 
 	public static void main(String[] args) {
-		 List<DTO_DiagBundle> x=getdiagnosticBundleByCompanyAndDateRange("novatec","sixMonth",false);
+		 List<DTO_DiagBundle> x=getdiagnosticBundleByCompanyAndDateRange("BLR-SRINIBAS","sixMonth",true);
 		 for(DTO_DiagBundle a:x){
 			 System.out.println(a);
 		 }

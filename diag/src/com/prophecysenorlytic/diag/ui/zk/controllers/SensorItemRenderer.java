@@ -26,25 +26,39 @@ public class SensorItemRenderer implements ListitemRenderer<DTO_Sensor>, EventLi
 	@Override
 	public void render(final Listitem item, final DTO_Sensor data, int index) throws Exception {
 		item.setValue(data);
+
+		String styleRow = "background-color:%s;color:%s";
+		String bg = index % 2 == 0 ? "#cce0ff" : "#b3b3ff";
+
+		item.setStyle(String.format(styleRow, bg, "#000000"));
 		addCell_PreviewButton(item, data, index);
 		addCell_SensorId(item, data, index);
 		addCell_Subassembly(item, data, index);
+		item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				parentController.onDblClickSensorList();
+
+			}
+		});
 
 	}
 
 	private void addCell_PreviewButton(final Listitem item, final DTO_Sensor data, int index) {
 		final Listcell cell = new Listcell();
 		cell.setImage("icons/icon_view.jpg");
-		
+
 		cell.setParent(item);
 		String _id = data.get_id();
-		boolean itemShouldBeDisabled=(null==_id)||_id.length()==0;
-		cell.setTooltiptext(itemShouldBeDisabled?"Sensor Disconnected!":"Quick Information");
+		boolean itemShouldBeDisabled = (null == _id) || _id.length() == 0;
+		cell.setTooltiptext(itemShouldBeDisabled ? "Sensor Disconnected!" : "Quick Information");
 		if (false == itemShouldBeDisabled) {
-			cell.addEventListener(Events.ON_MOUSE_OVER, new EventListener<Event>() {
+			cell.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 
 				@Override
 				public void onEvent(Event event) throws Exception {
+					// event.stopPropagation();
 					DTO_Sensor selectedSensor = data;
 					DTO_SensorStat currentStatus = RestAPI_CurrentSensorStats
 							.getSensorCurrentStatsBySensorId(selectedSensor.get_id(), SensorItemRenderer.this.isMVP);

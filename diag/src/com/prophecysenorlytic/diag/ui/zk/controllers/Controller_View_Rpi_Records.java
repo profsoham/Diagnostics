@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.zkoss.zhtml.Head;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
@@ -38,6 +40,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 import com.prophecysenorlytic.diag.dao.DaoRpiDetails;
+import com.prophecysenorlytic.diag.dao.DaoRpiDetails_OldTable;
 import com.prophecysenorlytic.diag.dao.util.Util_CSV;
 import com.prophecysenorlytic.diag.dto.RpiDetails;
 import com.prophecysenorlytic.diag.resthandlers.RestAPI_CompanyDetails;
@@ -57,11 +60,13 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 	private static final long serialVersionUID = -7005689666335640984L;
 	private static final int _MAX_NUMBER_OF_RECORDS = 50;
 
+	/* This is a provisional one for Hellerman */
+	boolean isHellerman = false;
+
 	private int offset = 0;
 
 	@Wire
-	Textbox tb_Company;
-
+	Popup popup_Json;
 	@Wire
 	Combobox cmb_Companies;
 	@Wire
@@ -94,6 +99,8 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 	Menupopup popupMenu_Rpi;
 	@Wire
 	Popup popup_LI;
+	@Wire
+	Label lbl_JSON;
 
 	@Wire
 	Html result_html;
@@ -119,7 +126,16 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 	@Listen("onSelect =#cmb_Companies")
 	public void onCompanySelected() {
 		String companyNameSelected = cmb_Companies.getValue();
-		this.rpisList = DaoRpiDetails.getRpi_ByCompanyName(companyNameSelected);
+		isHellerman = companyNameSelected.equalsIgnoreCase("HellermannTyton");
+		if (!isHellerman) {
+			this.rpisList = DaoRpiDetails.getRpi_ByCompanyName(companyNameSelected);
+		} else {
+			this.rpisList = DaoRpiDetails_OldTable.getRpi_ByCompanyName("hellerman"); // paramter
+																						// is
+																						// not
+																						// used
+																						// now
+		}
 		initListbox_Rpi();
 	}
 
@@ -187,11 +203,18 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 			startDate = c.getTime();
 
 		}
-		List<RpiDetails> details = DaoRpiDetails.getRpiRecordForInterval(mac, startDate, endDate, offset,
+		List<RpiDetails> details =isHellerman?DaoRpiDetails_OldTable.getRpiRecordForInterval(mac, startDate, endDate, offset,
+				_MAX_NUMBER_OF_RECORDS) : DaoRpiDetails.getRpiRecordForInterval(mac, startDate, endDate, offset,
 				_MAX_NUMBER_OF_RECORDS);
 		grd_Information.setModel(new SimpleListModel<RpiDetails>(details));
+		grd_Information.setRowRenderer(new Render_RpiDetails(this));
 		btn_Download.setDisabled(false);
 
+	}
+
+	public void showJsonPopup(String jsonString, Component cmp) {
+		lbl_JSON.setValue(jsonString);
+		popup_Json.open(cmp);
 	}
 
 	@Listen("onClick =#btn_Download")
@@ -289,7 +312,9 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 		c.add(Calendar.DATE, -numberOfDays);
 		Date dayBeforeYesteday = c.getTime();
 		this.currentDto = (RpiDetails) comp.getValue();
-		String htmlString = DaoRpiDetails.getSummaryAsHtmlString(currentDto.getMac(), dayBeforeYesteday, today);
+		String htmlString = isHellerman
+				? DaoRpiDetails_OldTable.getSummaryAsHtmlString(currentDto.getMac(), dayBeforeYesteday, today)
+				: DaoRpiDetails.getSummaryAsHtmlString(currentDto.getMac(), dayBeforeYesteday, today);
 		result_html.setContent(htmlString);
 		popup_LI.open(comp);
 	}
@@ -310,18 +335,14 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 		Set<Listitem> selectedItems = lst_Rpi.getSelectedItems();
 		for (Listitem item : selectedItems) {
 			RpiDetails dto = item.getValue();
-			DaoRpiDetails.populateQuickInfo(dto, numberOfDays);
+			if (!isHellerman) {
+				DaoRpiDetails.populateQuickInfo(dto, numberOfDays);
+			} else {
+				DaoRpiDetails_OldTable.populateQuickInfo(dto, numberOfDays);
+			}
 
 		}
 		initListbox_Rpi();
-	}
-
-	@Listen("onOK =#tb_Company")
-	public void onEnter_UnlistedCompany() {
-		String companyNameSelected = tb_Company.getText();
-		this.rpisList = DaoRpiDetails.getRpi_ByCompanyName(companyNameSelected);
-		initListbox_Rpi();
-
 	}
 
 	public void disablePageUntilDataSourceChanges() {
@@ -345,6 +366,11 @@ public class Controller_View_Rpi_Records extends SelectorComposer<Window> {
 		details.setMVP(isMVP);
 		initCompanyCombo();
 		reEnablePageAfterDataSourceChanges();
+	}
+
+	@Listen("onClick= #grd_Information > rows > row > label")
+	public void showAllInfoAsJson() {
+		System.out.println("Controller_View_Rpi_Records.showAllInfoAsJson()");
 	}
 
 }

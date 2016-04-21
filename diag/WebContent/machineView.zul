@@ -12,12 +12,12 @@
 			background-color: #008BB6; border-bottom: 0 none; }
 		</style>
 		<toolbar width="100%" sclass="vista">
-			<combobox id="cmb_Src" placeholder="MVP or BETA?"
+			<combobox id="cmb_Src" placeholder="MVP or BETA?" style="background-color:#ffffff;color:#000033" buttonVisible="true"
 				width="100px">
 				<comboitem label="BETA" value="BETA"></comboitem>
 				<comboitem label="MVP" value="MVP"></comboitem>
 			</combobox>
-			<combobox id="cmb_Companies"
+			<combobox id="cmb_Companies" style="background-color:#ffffff;color:#000033"   buttonVisible="true"
 				placeholder="Select a company">
 			</combobox>
 			<button id="btn_Serach" tooltiptext="Go"

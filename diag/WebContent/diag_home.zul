@@ -5,8 +5,9 @@
 		<tabbox orient="top">
 			<tabs width="230px">
 				<tab label="Prophecy Gateways" />
-				<tab label="Companies / Assets" />
-				<tab label="Bundle Viewer" />
+				<tab label="Assets / Sensors" />
+				<tab label="Diagnostics Viewer" />
+				<tab label="LIVE  Viewer" />
 			</tabs>
 			<tabpanels>
 				<tabpanel>
@@ -20,6 +21,10 @@
 				<tabpanel>
 
 					<include src="diagbundle.zul"></include>
+				</tabpanel>
+				<tabpanel>
+
+					<include src="rpiLive.zul"></include>
 				</tabpanel>
 			</tabpanels>
 		</tabbox>

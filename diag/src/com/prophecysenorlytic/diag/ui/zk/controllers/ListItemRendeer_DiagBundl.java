@@ -22,11 +22,15 @@ public class ListItemRendeer_DiagBundl implements ListitemRenderer<DTO_DiagBundl
 	@Override
 	public void render(Listitem item, DTO_DiagBundle data, int index) throws Exception {
 		item.setValue(data);
+		String styleRow = "background-color:%s;color:%s";
+		String bg = index % 2 == 0 ? "#cce0ff" : "#b3b3ff";
+
+		item.setStyle(String.format(styleRow, bg, "#000000"));
 		addCell_ReportDate(item, data, index);
 		addCell_CollectorType(item, data, index);
 		addCell_PIN(item, data, index);
 		addCell_DownloadLionk(item, data, index);
-		JSONObject jObj=((DTO_DiagBundle)item.getValue()).getJsonString();
+		JSONObject jObj = ((DTO_DiagBundle) item.getValue()).getJsonString();
 		item.setTooltiptext(jObj.toJSONString());
 
 	}
@@ -62,8 +66,8 @@ public class ListItemRendeer_DiagBundl implements ListitemRenderer<DTO_DiagBundl
 	public void onEvent(Event event) throws Exception {
 
 		Listitem listItem = (Listitem) event.getTarget();
-		JSONObject jObj=((DTO_DiagBundle)listItem.getValue()).getJsonString();
-		
+		JSONObject jObj = ((DTO_DiagBundle) listItem.getValue()).getJsonString();
+
 	}
 
 }

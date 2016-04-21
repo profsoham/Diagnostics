@@ -18,6 +18,7 @@ public class Util_CSV {
 	public static String getCSV_FileName(Date startDate, Date endDate, String mac) {
 		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
 		String result = String.format("%s_Log_%s-to%s.csv", mac, format.format(startDate), format.format(endDate));
+		System.err.println("--------------------------"+result);
 		return result;
 	}
 

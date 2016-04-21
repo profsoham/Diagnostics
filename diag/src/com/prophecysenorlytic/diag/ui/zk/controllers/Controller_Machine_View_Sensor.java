@@ -114,8 +114,8 @@ public class Controller_Machine_View_Sensor extends SelectorComposer<Window> {
 
 	}
 
-	@Listen("onSelect =#lst_Sensors")
-	public void onClickSensorList() {
+	
+	public void onDblClickSensorList() {
 		DTO_Sensor selectedSensor = lst_Sensors.getSelectedItem().getValue();
 		showPopup_HistorySensorStats(selectedSensor);
 

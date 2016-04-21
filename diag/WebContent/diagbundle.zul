@@ -6,12 +6,12 @@
 		<groupbox closable="false" zindex="5">
 			<caption label="Get via PIN"></caption>
 			<hbox>
-				<combobox id="cmb_SrcOne" placeholder="MVP or BETA?"
+				<combobox id="cmb_SrcOne" placeholder="MVP or BETA?" style="background-color:#000033;color:white"
 					width="100px" constraint="no empty">
 					<comboitem label="BETA" value="BETA"></comboitem>
 					<comboitem label="MVP" value="MVP"></comboitem>
 				</combobox>
-				<textbox id="tb_Pin" placeholder="Enter PIN"
+				<textbox id="tb_Pin" placeholder="Enter PIN" style="background-color:#000033;color:white"
 					constraint="no empty">
 				</textbox>
 				<button id="btn_Download" tooltiptext="Download Log"
@@ -28,23 +28,27 @@
 				<vbox>
 					<hbox>
 						<combobox id="cmb_Src"
-							placeholder="MVP or BETA?" width="100px">
+							placeholder="MVP or BETA?" width="100px"
+							style="background-color:#000033;color:white">
 							<comboitem label="BETA" value="BETA"></comboitem>
 							<comboitem label="MVP" value="MVP"></comboitem>
 						</combobox>
 						<combobox id="cmb_Companies"
+							style="background-color:#000033;color:white"
 							placeholder="Select a company" readonly="false" type="text">
 						</combobox>
 						<intbox id="tb_DateRangeFigure"
+							style="background-color:#000033;color:white;text-align:right"
 							constraint="no empty" placeholder="interval Range in number"
 							readonly="false" />
 
 
 						<combobox id="cmb_DateRangeUnit"
+							style="background-color:#000033;color:white"
 							constraint="no empty" placeholder="Select Interval Unit"
 							readonly="false" type="text">
-							<comboitem label="week" value="Week"></comboitem>
-							<comboitem label="month" value="Month">
+							<comboitem label="Week" value="Week"></comboitem>
+							<comboitem label="Month" value="Month">
 							</comboitem>
 						</combobox>
 						<button id="btn_Fetch" tooltiptext="Search"

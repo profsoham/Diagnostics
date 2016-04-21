@@ -116,6 +116,6 @@ public class Controller_BundleViewer extends SelectorComposer<Window> {
 
 	private String getNumberAsString(Integer value) {
 		String[] numbers = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-		return numbers[value];
+		return numbers[value-1];
 	}
 }

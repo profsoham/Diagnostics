@@ -1,0 +1,26 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window border="normal" width="600px" id="win_QR"
+		title="AAA Authenitcation Framework" mode="modal" height="500px" 
+		apply="com.prophecysensorlytic.daig.auth.zk.controller.Conmtroller_AuthQR">
+		<vbox align="center" width="100%">
+			<hbox align="end">
+				<textbox id="tb_UserName"
+					placeholder="Enter User Name">
+				</textbox>
+				<button label="Authenticate" id="btnAuth"></button>
+			</hbox>
+			<hbox align="center" width="100%" visible="false" id="hb_AuthPane">
+				<groupbox width="100%">
+					<caption label="Authentication Pane"></caption>
+
+					<image id="imgQR"></image>
+					<textbox id="tb_Challenge"
+						placeholder="Your password" constraint="no empty">
+					</textbox>
+					<button label="Verify" id="btn_Login"></button>
+				</groupbox>
+			</hbox>
+		</vbox>
+	</window>
+</zk>
